@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Auth
  * @subpackage Zend_Auth_Adapter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id$
+ * @version    $Id: Ldap.php 23486 2010-12-10 04:05:30Z mjh_ca $
  */
 
 /**
@@ -29,7 +29,7 @@ require_once 'Zend/Auth/Adapter/Interface.php';
  * @category   Zend
  * @package    Zend_Auth
  * @subpackage Zend_Auth_Adapter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
@@ -371,11 +371,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
                 } else {
                     $line = $zle->getLine();
                     $messages[] = $zle->getFile() . "($line): " . $zle->getMessage();
-                    $messages[] = preg_replace(
-						'/\b'.preg_quote(substr($password, 0, 15), '/').'\b/',
-						'*****',
-						$zle->getTraceAsString()
-					);
+                    $messages[] = str_replace($password, '*****', $zle->getTraceAsString());
                     $messages[0] = 'An unexpected failure occurred';
                 }
                 $messages[1] = $zle->getMessage();
@@ -492,9 +488,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
 
         $returnObject = new stdClass();
 
-        $returnAttribs = array_map('strtolower', $returnAttribs);
-        $omitAttribs   = array_map('strtolower', $omitAttribs);
-        $returnAttribs = array_diff($returnAttribs, $omitAttribs);
+        $omitAttribs = array_map('strtolower', $omitAttribs);
 
         $entry = $this->getLdap()->getEntry($this->_authenticatedDn, $returnAttribs, true);
         foreach ($entry as $attr => $value) {

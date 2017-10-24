@@ -14,7 +14,7 @@
  *
  * @category   Zend
  * @package    Zend_Form
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -26,9 +26,9 @@ require_once 'Zend/Validate/Interface.php';
  *
  * @category   Zend
  * @package    Zend_Form
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id$
+ * @version    $Id: Form.php 23604 2011-01-01 17:52:54Z ramon $
  */
 class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
 {
@@ -495,13 +495,12 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
                 $loader->addPrefixPath($prefix, $path);
                 return $this;
             case null:
-                $nsSeparator = (false !== strpos($prefix, '\\'))?'\\':'_';
-                $prefix = rtrim($prefix, $nsSeparator);
+                $prefix = rtrim($prefix, '_');
                 $path   = rtrim($path, DIRECTORY_SEPARATOR);
                 foreach (array(self::DECORATOR, self::ELEMENT) as $type) {
                     $cType        = ucfirst(strtolower($type));
                     $pluginPath   = $path . DIRECTORY_SEPARATOR . $cType . DIRECTORY_SEPARATOR;
-                    $pluginPrefix = $prefix . $nsSeparator . $cType;
+                    $pluginPrefix = $prefix . '_' . $cType;
                     $loader       = $this->getPluginLoader($type);
                     $loader->addPrefixPath($pluginPrefix, $pluginPath);
                 }
@@ -1014,7 +1013,6 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
      * @param  string|Zend_Form_Element $element
      * @param  string $name
      * @param  array|Zend_Config $options
-     * @throws Zend_Form_Exception on invalid element
      * @return Zend_Form
      */
     public function addElement($element, $name = null, $options = null)
@@ -1052,9 +1050,6 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
 
             $this->_elements[$name] = $element;
             $this->_elements[$name]->addPrefixPaths($prefixPaths);
-        } else {
-            require_once 'Zend/Form/Exception.php';
-            throw new Zend_Form_Exception('Element must be specified by string or Zend_Form_Element instance');
         }
 
         $this->_order[$name] = $this->_elements[$name]->getOrder();
@@ -1642,8 +1637,12 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
      */
     public function addSubForms(array $subForms)
     {
-        foreach ($subForms as $key => $spec) {          
-            $name= (string) $key;
+        foreach ($subForms as $key => $spec) {
+            $name = null;
+            if (!is_numeric($key)) {
+                $name = $key;
+            }
+
             if ($spec instanceof Zend_Form) {
                 $this->addSubForm($spec, $name);
                 continue;
@@ -2255,8 +2254,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
             }
         }
         foreach ($this->getSubForms() as $key => $form) {
-            if (null !== $translator && $this->hasTranslator()
-                    && !$form->hasTranslator()) {
+            if (null !== $translator && !$form->hasTranslator()) {
                 $form->setTranslator($translator);
             }
             if (isset($data[$key]) && !$form->isArray()) {
@@ -3278,7 +3276,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
     /**
      * Load the default decorators
      *
-     * @return Zend_Form
+     * @return void
      */
     public function loadDefaultDecorators()
     {

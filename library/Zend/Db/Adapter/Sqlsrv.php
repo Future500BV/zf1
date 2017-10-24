@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id$
+ * @version    $Id: Sqlsrv.php 23588 2010-12-28 23:06:39Z matthew $
  */
 
 /**
@@ -34,7 +34,7 @@ require_once 'Zend/Db/Statement/Sqlsrv.php';
  * @category   Zend
  * @package    Zend_Db
  * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
@@ -437,9 +437,9 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
         $sql    = "exec sp_columns @table_name = " . $this->quoteIdentifier($tableName, true);
         $stmt   = $this->query($sql);
         $result = $stmt->fetchAll(Zend_Db::FETCH_NUM);
-        
-        // ZF-7698
-        $stmt->closeCursor();
+		
+		// ZF-7698
+		$stmt->closeCursor();
 
         if (count($result) == 0) {
             return array();

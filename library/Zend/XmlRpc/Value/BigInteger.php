@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Zend Framework
  *
@@ -16,33 +15,41 @@
  * @category   Zend
  * @package    Zend_XmlRpc
  * @subpackage Value
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id$
+ * @version    $Id: BigInteger.php 23588 2010-12-28 23:06:39Z matthew $
  */
+
 
 /**
  * Zend_XmlRpc_Value_Integer
  */
 require_once 'Zend/XmlRpc/Value/Integer.php';
 
+
 /**
  * @category   Zend
  * @package    Zend_XmlRpc
  * @subpackage Value
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_XmlRpc_Value_BigInteger extends Zend_XmlRpc_Value_Integer
 {
+    /**
+     * @var Zend_Crypt_Math_BigInteger
+     */
+    protected $_integer;
+
     /**
      * @param mixed $value
      */
     public function __construct($value)
     {
         require_once 'Zend/Crypt/Math/BigInteger.php';
-        $integer = new Zend_Crypt_Math_BigInteger;
-        $this->_value = $integer->init($value);
+        $this->_integer = new Zend_Crypt_Math_BigInteger();
+        $this->_value = $this->_integer->init($this->_value);
+
         $this->_type = self::XMLRPC_TYPE_I8;
     }
 
@@ -53,6 +60,6 @@ class Zend_XmlRpc_Value_BigInteger extends Zend_XmlRpc_Value_Integer
      */
     public function getValue()
     {
-        return $this->_value;
+        return $this->_integer;
     }
 }

@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Oauth
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id$
+ * @version    $Id: Config.php 23484 2010-12-10 03:57:59Z mjh_ca $
  */
 
 /** Zend_Oauth */
@@ -31,7 +31,7 @@ require_once 'Zend/Oauth/Config/ConfigInterface.php';
 /**
  * @category   Zend
  * @package    Zend_Oauth
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Oauth_Config implements Zend_Oauth_Config_ConfigInterface
@@ -146,13 +146,6 @@ class Zend_Oauth_Config implements Zend_Oauth_Config_ConfigInterface
      * @var Zend_Oauth_Token
      */
     protected $_token = null;
-    
-    /**
-     * Define the OAuth realm
-     * 
-     * @var string
-     */
-    protected $_realm = null;
 
     /**
      * Constructor; create a new object with an optional array|Zend_Config
@@ -220,9 +213,6 @@ class Zend_Oauth_Config implements Zend_Oauth_Config_ConfigInterface
                     break;
                 case 'rsaPublicKey':
                     $this->setRsaPublicKey($value);
-                    break;
-                case 'realm':
-                    $this->setRealm($value);
                     break;
             }
         }
@@ -390,7 +380,7 @@ class Zend_Oauth_Config implements Zend_Oauth_Config_ConfigInterface
      */
     public function setCallbackUrl($url)
     {
-        if (!Zend_Uri::check($url) && $url !== 'oob') {
+        if (!Zend_Uri::check($url)) {
             require_once 'Zend/Oauth/Exception.php';
             throw new Zend_Oauth_Exception(
                 '\'' . $url . '\' is not a valid URI'
@@ -664,27 +654,5 @@ class Zend_Oauth_Config implements Zend_Oauth_Config_ConfigInterface
     public function getToken()
     {
         return $this->_token;
-    }
-
-    /**
-     * Set OAuth realm
-     *
-     * @param  string $realm
-     * @return Zend_Oauth_Config
-     */
-    public function setRealm($realm)
-    {
-        $this->_realm = $realm;
-        return $this;
-    }
-
-    /**
-     * Get OAuth realm
-     *
-     * @return string
-     */
-    public function getRealm()
-    {
-        return $this->_realm;
     }
 }

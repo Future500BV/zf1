@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Tool
  * @subpackage Framework
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id$
+ * @version    $Id: Action.php 23484 2010-12-10 03:57:59Z mjh_ca $
  */
 
 /**
@@ -33,7 +33,7 @@ require_once 'Zend/Tool/Framework/Provider/Pretendable.php';
 /**
  * @category   Zend
  * @package    Zend_Tool
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Tool_Project_Provider_Action
@@ -131,22 +131,6 @@ class Zend_Tool_Project_Provider_Action
 
         $this->_loadProfile();
 
-        // get request/response object
-        $request = $this->_registry->getRequest();
-        $response = $this->_registry->getResponse();
-
-        // determine if testing is enabled in the project
-        require_once 'Zend/Tool/Project/Provider/Test.php';
-        $testingEnabled = Zend_Tool_Project_Provider_Test::isTestingEnabled($this->_loadedProfile);
-
-        if ($testingEnabled && !Zend_Tool_Project_Provider_Test::isPHPUnitAvailable()) {
-            $testingEnabled = false;
-            $response->appendContent(
-                'Note: PHPUnit is required in order to generate controller test stubs.',
-                array('color' => array('yellow'))
-                );
-        }
-
         // Check that there is not a dash or underscore, return if doesnt match regex
         if (preg_match('#[_-]#', $name)) {
             throw new Zend_Tool_Project_Provider_Exception('Action names should be camel cased.');
@@ -165,12 +149,11 @@ class Zend_Tool_Project_Provider_Action
             throw new Zend_Tool_Project_Provider_Exception('This controller (' . $controllerName . ') already has an action named (' . $name . ')');
         }
 
-        $actionMethodResource = self::createResource($this->_loadedProfile, $name, $controllerName, $module);
+        $actionMethod = self::createResource($this->_loadedProfile, $name, $controllerName, $module);
 
-        $testActionMethodResource = null;
-        if ($testingEnabled) {
-            $testActionMethodResource = Zend_Tool_Project_Provider_Test::createApplicationResource($this->_loadedProfile, $controllerName, $name, $module);
-        }
+        // get request/response object
+        $request = $this->_registry->getRequest();
+        $response = $this->_registry->getResponse();
 
         // alert the user about inline converted names
         $tense = (($request->isPretend()) ? 'would be' : 'is');
@@ -198,25 +181,14 @@ class Zend_Tool_Project_Provider_Action
         if ($request->isPretend()) {
             $response->appendContent(
                 'Would create an action named ' . $name .
-                ' inside controller at ' . $actionMethodResource->getParentResource()->getContext()->getPath()
+                ' inside controller at ' . $actionMethod->getParentResource()->getContext()->getPath()
                 );
-
-            if ($testActionMethodResource) {
-                $response->appendContent('Would create an action test in ' . $testActionMethodResource->getParentResource()->getContext()->getPath());
-            }
-
         } else {
             $response->appendContent(
                 'Creating an action named ' . $name .
-                ' inside controller at ' . $actionMethodResource->getParentResource()->getContext()->getPath()
+                ' inside controller at ' . $actionMethod->getParentResource()->getContext()->getPath()
                 );
-            $actionMethodResource->create();
-
-            if ($testActionMethodResource) {
-                $response->appendContent('Creating an action test in ' . $testActionMethodResource->getParentResource()->getContext()->getPath());
-                $testActionMethodResource->create();
-            }
-
+            $actionMethod->create();
             $this->_storeProfile();
         }
 

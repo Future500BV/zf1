@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Http_UserAgent
  * @subpackage UserAgent
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -31,7 +31,7 @@
  * @category   Zend
  * @package    Zend_Http_UserAgent
  * @subpackage UserAgent
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Http_UserAgent implements Serializable
@@ -529,12 +529,7 @@ class Zend_Http_UserAgent implements Serializable
     }
 
     /**
-     * Returns the device object
-     *
-     * This is the object that will contain the various discovered device
-     * capabilities.
-     *
-     * @return Zend_Http_UserAgent_Device $device
+     * @return the $device
      */
     public function getDevice()
     {
@@ -619,7 +614,7 @@ class Zend_Http_UserAgent implements Serializable
     }
 
     /**
-     * Set the "$_SERVER" array
+     * Retrieve the "$_SERVER" array
      *
      * Basically, the $_SERVER array or an equivalent container storing the
      * data that will be introspected.

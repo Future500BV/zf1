@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id$
+ * @version    $Id: Entry.php 23484 2010-12-10 03:57:59Z mjh_ca $
  */
 
 /**
@@ -34,7 +34,7 @@ require_once 'Zend/Feed/Writer/Source.php';
 /**
  * @category   Zend
  * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Feed_Writer_Entry
@@ -214,7 +214,7 @@ class Zend_Feed_Writer_Entry
         $zdate = null;
         if ($date === null) {
             $zdate = new Zend_Date;
-        } elseif (ctype_digit((string)$date)) {
+        } elseif (ctype_digit($date) && strlen($date) == 10) {
             $zdate = new Zend_Date($date, Zend_Date::TIMESTAMP);
         } elseif ($date instanceof Zend_Date) {
             $zdate = $date;
@@ -235,7 +235,7 @@ class Zend_Feed_Writer_Entry
         $zdate = null;
         if ($date === null) {
             $zdate = new Zend_Date;
-        } elseif (ctype_digit((string)$date)) {
+        } elseif (ctype_digit($date) && strlen($date) == 10) {
             $zdate = new Zend_Date($date, Zend_Date::TIMESTAMP);
         } elseif ($date instanceof Zend_Date) {
             $zdate = $date;
@@ -295,7 +295,7 @@ class Zend_Feed_Writer_Entry
      */
     public function setCommentCount($count)
     {
-        if ( !is_numeric($count) || (int) $count < 0) {
+        if (empty($count) || !is_numeric($count) || (int) $count < 0) {
             require_once 'Zend/Feed/Exception.php';
             throw new Zend_Feed_Exception('Invalid parameter: "count" must be a non-empty integer number');
         }
