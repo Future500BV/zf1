@@ -456,7 +456,9 @@ class Zend_Session extends Zend_Session_Abstract
         }
 
         // See http://www.php.net/manual/en/ref.session.php for explanation
-        if (!self::$_unitTestEnabled && defined('SID')) {
+
+        // in PHP 7.2 `SID` will be defined, but as an empty string, which also means: session has not been started yet
+        if (!self::$_unitTestEnabled && defined('SID') && SID !== '') {
             /** @see Zend_Session_Exception */
             require_once 'Zend/Session/Exception.php';
             throw new Zend_Session_Exception('session has already been started by session.auto-start or session_start()');
