@@ -1052,7 +1052,7 @@ abstract class Zend_Db_Table_Abstract
         /**
          * If the primary key can be generated automatically, and no value was
          * specified in the user-supplied data, then omit it from the tuple.
-         * 
+         *
          * Note: this checks for sensible values in the supplied primary key
          * position of the data.  The following values are considered empty:
          *   null, false, true, '', array()
@@ -1254,12 +1254,14 @@ abstract class Zend_Db_Table_Abstract
         $whereList = array();
         $numberTerms = 0;
         foreach ($args as $keyPosition => $keyValues) {
-            $keyValuesCount = count($keyValues);
             // Coerce the values to an array.
             // Don't simply typecast to array, because the values
             // might be Zend_Db_Expr objects.
             if (!is_array($keyValues)) {
                 $keyValues = array($keyValues);
+                $keyValuesCount = 1;
+            } else {
+                $keyValuesCount = count($keyValues);
             }
             if ($numberTerms == 0) {
                 $numberTerms = $keyValuesCount;
