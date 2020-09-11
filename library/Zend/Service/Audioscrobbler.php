@@ -68,10 +68,6 @@ class Zend_Service_Audioscrobbler
     public function __construct()
     {
         $this->set('version', '1.0');
-
-        iconv_set_encoding('output_encoding', 'UTF-8');
-        iconv_set_encoding('input_encoding', 'UTF-8');
-        iconv_set_encoding('internal_encoding', 'UTF-8');
     }
 
     /**

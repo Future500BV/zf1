@@ -257,10 +257,6 @@ class Zend_XmlRpc_Client
     {
         $this->_lastRequest = $request;
 
-        iconv_set_encoding('input_encoding', 'UTF-8');
-        iconv_set_encoding('output_encoding', 'UTF-8');
-        iconv_set_encoding('internal_encoding', 'UTF-8');
-
         $http = $this->getHttpClient();
         if($http->getUri() === null) {
             $http->setUri($this->_serverAddress);

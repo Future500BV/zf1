@@ -59,7 +59,7 @@ class Zend_Validate_HostnameTest extends PHPUnit_Framework_TestCase
      */
     public function tearDown()
     {
-        iconv_set_encoding('internal_encoding', $this->_origEncoding);
+
     }
 
     /**
@@ -361,7 +361,6 @@ class Zend_Validate_HostnameTest extends PHPUnit_Framework_TestCase
      */
     public function testDifferentIconvEncoding()
     {
-        iconv_set_encoding('internal_encoding', 'ISO8859-1');
         $validator = new Zend_Validate_Hostname();
 
         $valuesExpected = array(
